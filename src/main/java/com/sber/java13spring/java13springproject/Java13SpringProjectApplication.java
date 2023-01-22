@@ -10,6 +10,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
+import java.util.List;
 
 @SpringBootApplication
 public class Java13SpringProjectApplication implements CommandLineRunner {
@@ -19,6 +22,10 @@ public class Java13SpringProjectApplication implements CommandLineRunner {
 //    public void setBookDaoBean(BookDaoBean bookDaoBean) {
 //        this.bookDaoBean = bookDaoBean;
 //    }
+    
+    //Третий автовайринг с использованием пропертей
+    @Autowired
+    private NamedParameterJdbcTemplate jdbcTemplate;
     
     //Ещё способо автовайринга - injection через конструктор нашего основного класса (даже автовайринг писать не надо)
     public Java13SpringProjectApplication(BookDaoBean bookDaoBean) {
@@ -41,5 +48,14 @@ public class Java13SpringProjectApplication implements CommandLineRunner {
 //        bookDaoBean.findBookById(1);
         
         bookDaoBean.findBookById(1);
+    
+        List<Book> books = jdbcTemplate.query("select * from books",
+                (rs, rowNum) -> new Book(
+                        rs.getInt("id"),
+                        rs.getString("title"),
+                        rs.getString("author"),
+                        rs.getDate("date_added")
+        ));
+        books.forEach(System.out::println);
     }
 }
