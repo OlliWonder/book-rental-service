@@ -1,13 +1,13 @@
 package com.sber.java13spring.java13springproject.dbexample.dao;
 
 import com.sber.java13spring.java13springproject.dbexample.DB.DBApp;
-import com.sber.java13spring.java13springproject.dbexample.model.Book;
+import com.sber.java13spring.java13springproject.dbexample.model.FirstBook;
 
 import java.sql.*;
 //В классе букДАО мы храним все методы для работы с книгами в базе данных
 public class BookDaoJDBC { //В этой версии ДАО мы вынесли путь в е-нам класс
     //select * from books where id = ?
-    public Book findBookById(Integer bookId) {
+    public FirstBook findBookById(Integer bookId) {
         try(Connection connection = DBApp.INSTANCE.newConnection()) { //INSTANCE - пример синглтона, через инстанс будем
             // получать единственный коннекшн/в единственном экземпляре
             if (connection != null) {
@@ -23,7 +23,7 @@ public class BookDaoJDBC { //В этой версии ДАО мы вынесли
             //теперь обработаем результат в java
             ResultSet resultSet = selectQuery.executeQuery();
             while (resultSet.next()) {
-                Book book = new Book();
+                FirstBook book = new FirstBook();
                 book.setBookTitle(resultSet.getString("title"));
                 book.setBookAuthor(resultSet.getString("author"));
                 book.setDateAdded(resultSet.getDate("date_added"));

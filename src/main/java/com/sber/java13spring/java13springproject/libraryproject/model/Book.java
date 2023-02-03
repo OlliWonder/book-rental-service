@@ -1,5 +1,7 @@
 package com.sber.java13spring.java13springproject.libraryproject.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,8 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @SequenceGenerator(name = "default_generator", sequenceName = "book_seq", allocationSize = 1)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@json_id")
 public class Book extends GenericModel {
     
     @Column(name = "title", nullable = false)
@@ -30,6 +34,7 @@ public class Book extends GenericModel {
     
     @Column(name = "storage_place")
     private String storagePlace;
+    
     @Column(name = "online_copy_path")
     private String onlineCopy;
     
@@ -42,10 +47,12 @@ public class Book extends GenericModel {
     @Column(name = "genre")
     @Enumerated
     private Genre genre;
+    
     @ManyToMany
     @JoinTable(name = "books_authors",
     joinColumns = @JoinColumn(name = "book_id"), foreignKey = @ForeignKey(name = "FK_BOOKS_AUTHORS"),
     inverseJoinColumns = @JoinColumn(name = "author_id"), inverseForeignKey = @ForeignKey(name = "FK_AUTHORS_BOOKS"))
+    //@JsonBackReference
     private Set<Author> authors;
     
     @OneToMany(mappedBy = "book")

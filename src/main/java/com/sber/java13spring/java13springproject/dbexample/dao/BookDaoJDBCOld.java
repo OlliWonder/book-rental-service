@@ -1,12 +1,12 @@
 package com.sber.java13spring.java13springproject.dbexample.dao;
 
-import com.sber.java13spring.java13springproject.dbexample.model.Book;
+import com.sber.java13spring.java13springproject.dbexample.model.FirstBook;
 
 import java.sql.*;
 
 public class BookDaoJDBCOld {
     //select * from books where id = ?
-    public Book findBookById(Integer bookId) {
+    public FirstBook findBookById(Integer bookId) {
         try(Connection connection = newConnection()) {
             if (connection != null) {
                 System.out.println("Ура! Мы подключились к базе!");
@@ -21,7 +21,7 @@ public class BookDaoJDBCOld {
             //теперь обработаем результат в java
             ResultSet resultSet = selectQuery.executeQuery();
             while (resultSet.next()) {
-                Book book = new Book();
+                FirstBook book = new FirstBook();
                 book.setBookTitle(resultSet.getString("title"));
                 book.setBookAuthor(resultSet.getString("author"));
                 book.setDateAdded(resultSet.getDate("date_added"));

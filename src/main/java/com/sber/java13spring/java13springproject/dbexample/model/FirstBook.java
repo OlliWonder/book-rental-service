@@ -10,7 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Book {
+public class FirstBook {
     @Setter(AccessLevel.NONE)
     //@Getter(AccessLevel.NONE)
     private Integer bookId;

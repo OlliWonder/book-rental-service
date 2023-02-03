@@ -1,5 +1,7 @@
 package com.sber.java13spring.java13springproject.libraryproject.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,8 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @SequenceGenerator(name = "default_generator", sequenceName = "author_seq", allocationSize = 1)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@json_id")
 public class Author extends GenericModel {
     
     @Column(name = "fio", nullable = false)
@@ -24,7 +28,17 @@ public class Author extends GenericModel {
     
     @Column(name = "description")
     private String description;
+
+//    @ManyToMany(mappedBy = "authors")
+//    private Set<Book> books;
     
-    @ManyToMany(mappedBy = "authors")
+    //чтобы не было главной/не главной таблицы
+    @ManyToMany
+    //@JsonIgnore //убирает рекурсию
+    //@JsonManagedReference //убирает рекурсию в связке с JsonBackReference, но не будет работать десериализация
+    @JoinTable(
+            name = "books_authors",
+            joinColumns = @JoinColumn(name = "author_id"), foreignKey = @ForeignKey(name = "FK_AUTHORS_BOOKS"),
+            inverseJoinColumns = @JoinColumn(name = "book_id"), inverseForeignKey = @ForeignKey(name = "FK_BOOKS_AUTHORS"))
     private Set<Book> books;
 }

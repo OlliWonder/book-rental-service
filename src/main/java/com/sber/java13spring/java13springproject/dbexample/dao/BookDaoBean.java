@@ -1,7 +1,6 @@
 package com.sber.java13spring.java13springproject.dbexample.dao;
 
-import com.sber.java13spring.java13springproject.dbexample.DB.DBApp;
-import com.sber.java13spring.java13springproject.dbexample.model.Book;
+import com.sber.java13spring.java13springproject.dbexample.model.FirstBook;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -15,14 +14,14 @@ public class BookDaoBean {
         this.connection = connection;
     }
     
-    public Book findBookById(Integer bookId) throws SQLException {
+    public FirstBook findBookById(Integer bookId) throws SQLException {
         PreparedStatement selectQuery = connection.prepareStatement("select * from books where id = ?");
         selectQuery.setInt(1, bookId); //Если будет ещё знак вопроса, то добавим еще одну строчку с
         //индексом 2 и значением
     
         //теперь обработаем результат в java
         ResultSet resultSet = selectQuery.executeQuery();
-        Book book = new Book();
+        FirstBook book = new FirstBook();
         while (resultSet.next()) {
             book.setBookTitle(resultSet.getString("title"));
             book.setBookAuthor(resultSet.getString("author"));
