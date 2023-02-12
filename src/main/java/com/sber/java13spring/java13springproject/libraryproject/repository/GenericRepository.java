@@ -2,7 +2,7 @@ package com.sber.java13spring.java13springproject.libraryproject.repository;
 
 import com.sber.java13spring.java13springproject.libraryproject.model.GenericModel;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.stereotype.Component;
 
 /**
  * Абстрактный репозиторий
@@ -11,6 +11,6 @@ import org.springframework.data.repository.NoRepositoryBean;
  * а должны указывать параметризованный (GenericRepository)
  * @param <T> - Сущность с которой работает репозиторий
  */
-@NoRepositoryBean
+@Component
 public interface GenericRepository<T extends GenericModel> extends JpaRepository<T, Long> {
 }

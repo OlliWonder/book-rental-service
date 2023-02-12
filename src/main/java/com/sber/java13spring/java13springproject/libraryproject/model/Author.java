@@ -1,7 +1,5 @@
 package com.sber.java13spring.java13springproject.libraryproject.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @SequenceGenerator(name = "default_generator", sequenceName = "author_seq", allocationSize = 1)
 //@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
-@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@json_id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@json_id")
 public class Author extends GenericModel {
     
     @Column(name = "fio", nullable = false)

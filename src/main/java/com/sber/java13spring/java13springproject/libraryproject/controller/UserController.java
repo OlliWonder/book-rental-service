@@ -1,7 +1,8 @@
 package com.sber.java13spring.java13springproject.libraryproject.controller;
 
+import com.sber.java13spring.java13springproject.libraryproject.dto.UserDTO;
 import com.sber.java13spring.java13springproject.libraryproject.model.User;
-import com.sber.java13spring.java13springproject.libraryproject.repository.UserRepository;
+import com.sber.java13spring.java13springproject.libraryproject.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,13 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/users")
 @Tag(name = "Пользователи",
         description = "Контроллер для работы с пользователями библиотеки")
-public class UserController
-        extends GenericController<User> {
+public class UserController extends GenericController<User, UserDTO> {
     
-    private final UserRepository userRepository;
-    
-    public UserController(UserRepository userRepository) {
-        super(userRepository);
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        super(userService);
     }
 }
