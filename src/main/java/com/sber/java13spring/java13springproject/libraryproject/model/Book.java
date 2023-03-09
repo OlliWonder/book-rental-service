@@ -45,14 +45,22 @@ public class Book extends GenericModel {
     @Column(name = "genre")
     @Enumerated
     private Genre genre;
-    
-    @ManyToMany
+    /*
+    ALL - повторить все операции для дочерних объектов
+    PERSIST - повторить сохранение
+    MERGE - повторить обновление
+    REMOVE - повторить удаление
+    DELETE - -//-
+    DETACH - повторить удаление из сессии
+    orphanRemoval = true - удалить объект, если на него не ссылается ни один родитель
+     */
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "books_authors",
     joinColumns = @JoinColumn(name = "book_id"), foreignKey = @ForeignKey(name = "FK_BOOKS_AUTHORS"),
     inverseJoinColumns = @JoinColumn(name = "author_id"), inverseForeignKey = @ForeignKey(name = "FK_AUTHORS_BOOKS"))
     //@JsonBackReference
     private Set<Author> authors;
     
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<BookRentInfo> bookRentInfos;
 }

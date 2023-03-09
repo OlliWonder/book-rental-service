@@ -7,6 +7,7 @@ import com.sber.java13spring.java13springproject.libraryproject.repository.Gener
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -21,8 +22,8 @@ import java.util.List;
 public abstract class GenericService<T extends GenericModel, N extends GenericDTO> {
     
     //Инжектим абстрактный репозиторий для работы с базой данных
-    private final GenericRepository<T> repository;
-    private final GenericMapper<T, N> mapper;
+    protected final GenericRepository<T> repository;
+    protected final GenericMapper<T, N> mapper;
     
     protected GenericService(GenericRepository<T> repository, GenericMapper<T, N> mapper) {
         this.repository = repository;
@@ -39,6 +40,9 @@ public abstract class GenericService<T extends GenericModel, N extends GenericDT
     }
     
     public N create(N object) {
+        //переделаем, когда будет спринг сисуриту
+        object.setCreatedBy("Admin");
+        object.setCreatedWhen(LocalDateTime.now());
         return mapper.toDTO(repository.save(mapper.toEntity(object)));
     }
     

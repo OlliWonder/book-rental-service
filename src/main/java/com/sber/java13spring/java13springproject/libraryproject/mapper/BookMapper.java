@@ -8,6 +8,8 @@ import jakarta.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
@@ -31,7 +33,8 @@ public class BookMapper extends GenericMapper<Book, BookDTO> {
         mapper.createTypeMap(Book.class, BookDTO.class)
                 .addMappings(m -> m.skip(BookDTO::setAuthorsIds)).setPostConverter(toDtoConverter());
         mapper.createTypeMap(BookDTO.class, Book.class)
-                .addMappings(m -> m.skip(Book::setAuthors)).setPostConverter(toEntityConverter());
+                .addMappings(m -> m.skip(Book::setAuthors)).setPostConverter(toEntityConverter())
+                .addMappings(m -> m.skip(Book::setPublishDate)).setPostConverter(toEntityConverter());
     }
     
     @Override
@@ -42,6 +45,9 @@ public class BookMapper extends GenericMapper<Book, BookDTO> {
         else {
             destination.setAuthors(Collections.emptySet());
         }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date = LocalDate.parse(source.getPublishDate(), formatter);
+        destination.setPublishDate(date);
     }
     
     @Override

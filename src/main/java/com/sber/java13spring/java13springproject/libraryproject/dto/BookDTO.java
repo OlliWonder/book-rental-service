@@ -14,7 +14,7 @@ import java.util.Set;
 public class BookDTO extends GenericDTO {
     
     private String bookTitle;
-    private LocalDate publishDate;
+    private String publishDate;
     private Integer pageCount;
     private Integer amount;
     private String storagePlace;

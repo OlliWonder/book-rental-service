@@ -23,9 +23,9 @@ public class GenericModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "default_generator")
     private Long id;
     
-    @Column(name = "created_when")
+    @Column(name = "created_when", nullable = false)
     private LocalDateTime createdWhen;
     
-    @Column(name = "created_by")
+    @Column(name = "created_by", nullable = false)
     private String createdBy;
 }

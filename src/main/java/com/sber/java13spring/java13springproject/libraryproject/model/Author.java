@@ -31,7 +31,7 @@ public class Author extends GenericModel {
 //    private Set<Book> books;
     
     //чтобы не было главной/не главной таблицы
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     //@JsonIgnore //убирает рекурсию
     //@JsonManagedReference //убирает рекурсию в связке с JsonBackReference, но не будет работать десериализация
     @JoinTable(
