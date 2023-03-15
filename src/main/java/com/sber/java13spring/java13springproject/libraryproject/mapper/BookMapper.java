@@ -4,12 +4,11 @@ import com.sber.java13spring.java13springproject.libraryproject.dto.BookDTO;
 import com.sber.java13spring.java13springproject.libraryproject.model.Book;
 import com.sber.java13spring.java13springproject.libraryproject.model.GenericModel;
 import com.sber.java13spring.java13springproject.libraryproject.repository.AuthorRepository;
+import com.sber.java13spring.java13springproject.libraryproject.utils.DateFormatter;
 import jakarta.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
@@ -29,6 +28,7 @@ public class BookMapper extends GenericMapper<Book, BookDTO> {
     }
     
     @PostConstruct
+    @Override
     public void setupMapper() {
         mapper.createTypeMap(Book.class, BookDTO.class)
                 .addMappings(m -> m.skip(BookDTO::setAuthorsIds)).setPostConverter(toDtoConverter());
@@ -45,9 +45,7 @@ public class BookMapper extends GenericMapper<Book, BookDTO> {
         else {
             destination.setAuthors(Collections.emptySet());
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate date = LocalDate.parse(source.getPublishDate(), formatter);
-        destination.setPublishDate(date);
+        destination.setPublishDate(DateFormatter.formatStringToDate(source.getPublishDate()));
     }
     
     @Override

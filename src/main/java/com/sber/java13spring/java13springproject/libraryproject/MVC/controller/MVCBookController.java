@@ -3,6 +3,7 @@ package com.sber.java13spring.java13springproject.libraryproject.MVC.controller;
 import com.sber.java13spring.java13springproject.libraryproject.dto.BookDTO;
 import com.sber.java13spring.java13springproject.libraryproject.dto.BookWithAuthorsDTO;
 import com.sber.java13spring.java13springproject.libraryproject.service.BookService;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
+@Hidden
 @RequestMapping("books")
 public class MVCBookController {
     private final BookService bookService;

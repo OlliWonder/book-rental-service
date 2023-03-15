@@ -25,6 +25,7 @@ public class BookRentInfoMapper extends GenericMapper<BookRentInfo, BookRentInfo
     }
     
     @PostConstruct
+    @Override
     public void setupMapper() {
         super.modelMapper.createTypeMap(BookRentInfo.class, BookRentInfoDTO.class)
               .addMappings(m -> m.skip(BookRentInfoDTO::setUserId)).setPostConverter(toDtoConverter())

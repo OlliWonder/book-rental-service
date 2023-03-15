@@ -24,6 +24,7 @@ public class BookWithAuthorsMapper extends GenericMapper<Book, BookWithAuthorsDT
     }
     
     @PostConstruct
+    @Override
     protected void setupMapper() {
         modelMapper.createTypeMap(Book.class, BookWithAuthorsDTO.class)
                 .addMappings(m -> m.skip(BookWithAuthorsDTO::setAuthorsIds)).setPostConverter(toDtoConverter());

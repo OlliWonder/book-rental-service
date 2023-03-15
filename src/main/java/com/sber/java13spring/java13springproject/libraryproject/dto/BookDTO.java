@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -20,6 +19,7 @@ public class BookDTO extends GenericDTO {
     private String storagePlace;
     private String onlineCopy;
     private String description;
+    private String publish;
     private Genre genre;
     private Set<Long> authorsIds;
 }

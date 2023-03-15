@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -15,11 +15,12 @@ public class UserDTO extends GenericDTO {
     private String login;
     private String password;
     private String email;
-    private LocalDate birthDate;
+    private String birthDate;
     private String firstName;
     private String lastName;
     private String middleName;
     private String phone;
     private String address;
     private RoleDTO role;
+    private Set<Long> userBooksRent;
 }

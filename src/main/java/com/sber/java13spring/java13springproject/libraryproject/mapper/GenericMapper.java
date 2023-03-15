@@ -2,6 +2,7 @@ package com.sber.java13spring.java13springproject.libraryproject.mapper;
 
 import com.sber.java13spring.java13springproject.libraryproject.dto.GenericDTO;
 import com.sber.java13spring.java13springproject.libraryproject.model.GenericModel;
+import jakarta.annotation.PostConstruct;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -74,4 +75,7 @@ public abstract class GenericMapper<E extends GenericModel, D extends GenericDTO
     abstract void mapSpecificFields(E source, D destination);
     
     protected abstract Set<Long> getIds(E entity);
+    
+    @PostConstruct
+    protected abstract void setupMapper();
 }

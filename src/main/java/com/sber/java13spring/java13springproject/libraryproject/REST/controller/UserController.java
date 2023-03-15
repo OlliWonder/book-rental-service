@@ -1,4 +1,4 @@
-package com.sber.java13spring.java13springproject.libraryproject.controller;
+package com.sber.java13spring.java13springproject.libraryproject.REST.controller;
 
 import com.sber.java13spring.java13springproject.libraryproject.dto.UserDTO;
 import com.sber.java13spring.java13springproject.libraryproject.model.User;
