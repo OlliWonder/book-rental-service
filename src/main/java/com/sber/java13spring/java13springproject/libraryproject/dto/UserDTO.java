@@ -1,9 +1,6 @@
 package com.sber.java13spring.java13springproject.libraryproject.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -11,6 +8,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class UserDTO extends GenericDTO {
     private String login;
     private String password;
@@ -22,5 +20,6 @@ public class UserDTO extends GenericDTO {
     private String phone;
     private String address;
     private RoleDTO role;
+    private String changePasswordToken;
     private Set<Long> userBooksRent;
 }

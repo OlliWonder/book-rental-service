@@ -15,8 +15,8 @@ import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.Arrays;
-import java.util.List;
 
+import static com.sber.java13spring.java13springproject.libraryproject.constants.SecurityConstants.*;
 import static com.sber.java13spring.java13springproject.libraryproject.constants.UserRolesConstants.ADMIN;
 import static com.sber.java13spring.java13springproject.libraryproject.constants.UserRolesConstants.LIBRARIAN;
 
@@ -25,29 +25,13 @@ import static com.sber.java13spring.java13springproject.libraryproject.constants
 public class WebSecurityConfig {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final CustomUserDetailsService customUserDetailsService;
-    
-    private final List<String> RESOURCES_WHITE_LIST = List.of("/resources/**",
-            "/js/**",
-            "/css/**",
-            "/swagger-ui/**",
-            "/");
-    
-    private final List<String> BOOKS_WHITE_LIST = List.of("/books");
-    private final List<String> BOOKS_PERMISSION_LIST = List.of("/books/add",
-            "/books/update",
-            "/books/delete");
-    
-    private final List<String> USERS_WHITE_LIST = List.of("/login",
-            "/users/registration",
-            "/users/remember-password",
-            "/users/change-password");
-    
+
     public WebSecurityConfig(BCryptPasswordEncoder bCryptPasswordEncoder,
                              CustomUserDetailsService customUserDetailsService) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.customUserDetailsService = customUserDetailsService;
     }
-    
+
     //https://docs.spring.io/spring-security/reference/servlet/exploits/firewall.html
     @Bean
     public HttpFirewall httpFirewall() {
@@ -58,7 +42,7 @@ public class WebSecurityConfig {
         firewall.setAllowedHttpMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         return firewall;
     }
-    
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -91,7 +75,7 @@ public class WebSecurityConfig {
                 );
         return http.build();
     }
-    
+
     @Autowired
     protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder);

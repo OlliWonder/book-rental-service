@@ -1,6 +1,7 @@
 package com.sber.java13spring.java13springproject.libraryproject.REST.controller;
 
 import com.sber.java13spring.java13springproject.libraryproject.dto.GenericDTO;
+import com.sber.java13spring.java13springproject.libraryproject.exception.MyDeleteException;
 import com.sber.java13spring.java13springproject.libraryproject.model.GenericModel;
 import com.sber.java13spring.java13springproject.libraryproject.service.GenericService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,11 +22,11 @@ import java.util.List;
  */
 @RestController
 public abstract class GenericController<T extends GenericModel, N extends GenericDTO> {
-    
     private GenericService<T, N> service;
     
-    //@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    public GenericController(GenericService<T, N> service) {
+    public GenericController(//GenericRepository<T> genericRepository,
+                             GenericService<T, N> service) {
+        //this.genericRepository = genericRepository;
         this.service = service;
     }
     
@@ -34,6 +35,7 @@ public abstract class GenericController<T extends GenericModel, N extends Generi
     @RequestMapping(value = "/getOneById", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<N> getOneById(@RequestParam(value = "id") Long id) {
         return ResponseEntity.status(HttpStatus.OK)
+                // .body(genericRepository.findById(id).orElseThrow(() -> new NotFoundException("Данных с переданным ID не найдено")));
                 .body(service.getOne(id));
     }
     
@@ -48,7 +50,6 @@ public abstract class GenericController<T extends GenericModel, N extends Generi
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<N> create(@RequestBody N newEntity) {
-        newEntity.setCreatedWhen(LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(newEntity));
     }
     
@@ -66,7 +67,7 @@ public abstract class GenericController<T extends GenericModel, N extends Generi
     //@PathVariable: localhost:9090/api/rest/books/deleteBook/1
     @Operation(description = "Удалить запись по ID", method = "delete")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable(value = "id") Long id) {
+    public void delete(@PathVariable(value = "id") Long id) throws MyDeleteException {
         service.delete(id);
     }
 }

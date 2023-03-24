@@ -6,9 +6,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends GenericRepository<User> {
     
-    // Свой запрос с помощью аннотации:
-    // @Query(nativeQuery = true, value = "select * from users where login = :login");
-    User findUserByLogin(String login); //select * from users where login = ?
+    //select * from users where login = ?
+//    @Query(nativeQuery = true, value = "select * from users where login = :login")
+    User findUserByLogin(String login);
     
     User findUserByEmail(String email);
+    
+    User findUserByChangePasswordToken(String token);
 }

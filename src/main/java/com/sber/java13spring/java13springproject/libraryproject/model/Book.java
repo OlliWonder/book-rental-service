@@ -34,7 +34,7 @@ public class Book extends GenericModel {
     private String storagePlace;
     
     @Column(name = "online_copy_path")
-    private String onlineCopy;
+    private String onlineCopyPath;
     
     @Column(name = "description")
     private String description;

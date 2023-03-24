@@ -17,7 +17,7 @@ public class BookDTO extends GenericDTO {
     private Integer pageCount;
     private Integer amount;
     private String storagePlace;
-    private String onlineCopy;
+    private String onlineCopyPath;
     private String description;
     private String publish;
     private Genre genre;

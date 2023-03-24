@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//Ищет пользователя по логину и пытается авторизовать
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     

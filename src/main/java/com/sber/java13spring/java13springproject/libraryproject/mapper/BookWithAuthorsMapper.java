@@ -34,12 +34,12 @@ public class BookWithAuthorsMapper extends GenericMapper<Book, BookWithAuthorsDT
     }
     
     @Override
-    void mapSpecificFields(BookWithAuthorsDTO source, Book destination) {
+    protected void mapSpecificFields(BookWithAuthorsDTO source, Book destination) {
         destination.setAuthors(new HashSet<>(authorRepository.findAllById(source.getAuthorsIds())));
     }
     
     @Override
-    void mapSpecificFields(Book source, BookWithAuthorsDTO destination) {
+    protected void mapSpecificFields(Book source, BookWithAuthorsDTO destination) {
         destination.setAuthorsIds(getIds(source));
     }
     
