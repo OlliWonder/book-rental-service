@@ -3,18 +3,27 @@ package com.sber.java13spring.java13springproject.libraryproject.service;
 import com.sber.java13spring.java13springproject.libraryproject.constants.MailConstants;
 import com.sber.java13spring.java13springproject.libraryproject.dto.RoleDTO;
 import com.sber.java13spring.java13springproject.libraryproject.dto.UserDTO;
+import com.sber.java13spring.java13springproject.libraryproject.exception.MyDeleteException;
 import com.sber.java13spring.java13springproject.libraryproject.mapper.UserMapper;
 import com.sber.java13spring.java13springproject.libraryproject.model.User;
 import com.sber.java13spring.java13springproject.libraryproject.repository.UserRepository;
 import com.sber.java13spring.java13springproject.libraryproject.utils.MailUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+
+import static com.sber.java13spring.java13springproject.libraryproject.constants.UserRolesConstants.ADMIN;
 
 @Service
 public class UserService extends GenericService<User, UserDTO> {
@@ -45,7 +54,13 @@ public class UserService extends GenericService<User, UserDTO> {
     @Override
     public UserDTO create(UserDTO object) {
         RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setId(1L);
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (ADMIN.equalsIgnoreCase(userName)) {
+            roleDTO.setId(2L);//библиотекарь
+        }
+        else {
+            roleDTO.setId(1L);//пользователь
+        }
         object.setRole(roleDTO);
         object.setCreatedBy("REGISTRATION FORM");
         object.setCreatedWhen(LocalDateTime.now());
@@ -69,5 +84,34 @@ public class UserService extends GenericService<User, UserDTO> {
         user.setChangePasswordToken(null);
         user.setPassword(bCryptPasswordEncoder.encode(password));
         update(user);
+    }
+    
+    public Page<UserDTO> findUsers(UserDTO userDTO,
+                                   Pageable pageable) {
+        Page<User> users = ((UserRepository) repository).searchUsers(userDTO.getFirstName(),
+                userDTO.getLastName(),
+                userDTO.getLogin(),
+                pageable);
+        List<UserDTO> result = mapper.toDTOs(users.getContent());
+        return new PageImpl<>(result, pageable, users.getTotalElements());
+    }
+    
+    public List<String> getUserEmailsWithDelayedRentDate() {
+        return ((UserRepository) repository).getDelayedEmails();
+    }
+    
+    @Override
+    public void delete(Long id) throws MyDeleteException {
+        User user = repository.findById(id).orElseThrow(
+                () -> new NotFoundException("Пользователя с заданным ID=" + id + " не существует"));
+        markAsDeleted(user);
+        repository.save(user);
+    }
+    
+    public void restore(Long objectId) {
+        User user = repository.findById(objectId).orElseThrow(
+                () -> new NotFoundException("Пользователя с заданным ID=" + objectId + " не существует"));
+        unMarkAsDeleted(user);
+        repository.save(user);
     }
 }

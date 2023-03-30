@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -17,8 +18,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import java.util.Arrays;
 
 import static com.sber.java13spring.java13springproject.libraryproject.constants.SecurityConstants.*;
-import static com.sber.java13spring.java13springproject.libraryproject.constants.UserRolesConstants.ADMIN;
-import static com.sber.java13spring.java13springproject.libraryproject.constants.UserRolesConstants.LIBRARIAN;
+import static com.sber.java13spring.java13springproject.libraryproject.constants.SecurityConstants.USERS_PERMISSION_LIST;
+import static com.sber.java13spring.java13springproject.libraryproject.constants.UserRolesConstants.*;
 
 @Configuration
 @EnableWebSecurity
@@ -47,15 +48,20 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
 //              csrf().disable()
-                .csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                )
+//                .csrf(csrf -> csrf
+//                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//                )
+                .cors(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
                 //Настройка http запросов - кому куда можно/нельзя
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(RESOURCES_WHITE_LIST.toArray(String[]::new)).permitAll()
                         .requestMatchers(BOOKS_WHITE_LIST.toArray(String[]::new)).permitAll()
+                        .requestMatchers(AUTHORS_WHITE_LIST.toArray(String[]::new)).permitAll()
                         .requestMatchers(USERS_WHITE_LIST.toArray(String[]::new)).permitAll()
                         .requestMatchers(BOOKS_PERMISSION_LIST.toArray(String[]::new)).hasAnyRole(ADMIN, LIBRARIAN)
+                        .requestMatchers(AUTHORS_PERMISSION_LIST.toArray(String[]::new)).hasAnyRole(ADMIN, LIBRARIAN)
+                        .requestMatchers(USERS_PERMISSION_LIST.toArray(String[]::new)).hasAnyRole(LIBRARIAN, USER)
                         .anyRequest().authenticated()
                 )
                 //Настройка для входа в систему

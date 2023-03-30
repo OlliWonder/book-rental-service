@@ -4,6 +4,7 @@ import com.sber.java13spring.java13springproject.libraryproject.dto.BookRentInfo
 import com.sber.java13spring.java13springproject.libraryproject.model.BookRentInfo;
 import com.sber.java13spring.java13springproject.libraryproject.repository.BookRepository;
 import com.sber.java13spring.java13springproject.libraryproject.repository.UserRepository;
+import com.sber.java13spring.java13springproject.libraryproject.service.BookService;
 import jakarta.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -15,21 +16,29 @@ import java.util.Set;
 public class BookRentInfoMapper extends GenericMapper<BookRentInfo, BookRentInfoDTO> {
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
+    private final BookService bookService;
     
     protected BookRentInfoMapper(ModelMapper mapper,
                                  BookRepository bookRepository,
-                                 UserRepository userRepository) {
+                                 UserRepository userRepository,
+                                 BookService bookService) {
         super(mapper, BookRentInfo.class, BookRentInfoDTO.class);
         this.bookRepository = bookRepository;
         this.userRepository = userRepository;
+        this.bookService = bookService;
     }
     
     @PostConstruct
     @Override
     public void setupMapper() {
         super.modelMapper.createTypeMap(BookRentInfo.class, BookRentInfoDTO.class)
-              .addMappings(m -> m.skip(BookRentInfoDTO::setUserId)).setPostConverter(toDtoConverter())
-              .addMappings(m -> m.skip(BookRentInfoDTO::setBookId)).setPostConverter(toDtoConverter());
+                .addMappings(m -> m.skip(BookRentInfoDTO::setUserId)).setPostConverter(toDtoConverter())
+                .addMappings(m -> m.skip(BookRentInfoDTO::setBookId)).setPostConverter(toDtoConverter())
+                .addMappings(m -> m.skip(BookRentInfoDTO::setBookDTO)).setPostConverter(toDtoConverter());
+    
+        super.modelMapper.createTypeMap(BookRentInfoDTO.class, BookRentInfo.class)
+                .addMappings(m -> m.skip(BookRentInfo::setUser)).setPostConverter(toEntityConverter())
+                .addMappings(m -> m.skip(BookRentInfo::setBook)).setPostConverter(toEntityConverter());
     }
     
     @Override
@@ -42,6 +51,7 @@ public class BookRentInfoMapper extends GenericMapper<BookRentInfo, BookRentInfo
     protected void mapSpecificFields(BookRentInfo source, BookRentInfoDTO destination) {
         destination.setUserId(source.getUser().getId());
         destination.setBookId(source.getBook().getId());
+        destination.setBookDTO(bookService.getOne(source.getBook().getId()));
     }
     
     @Override

@@ -24,14 +24,14 @@
                     <p th:text="${book.getGenre().getGenreTextDisplay()}" class="form-control-plaintext" id="genre">
                 </div>
             </div>
-<!--            <div class="mb-2 row">-->
-<!--                <label class="col-sm-2 col-form-label">Онлайн копия:</label>-->
-<!--                <div class="col-sm-10">-->
-<!--                    <a class="text-link text-blue" th:if="${book.getOnlineCopyPath()} != null" th:href="@{|/books/download?bookId=${book.id}|}">-->
-<!--                        <span>Скачать книгу</span>-->
-<!--                    </a>-->
-<!--                </div>-->
-<!--            </div>-->
+            <!--            <div class="mb-2 row">-->
+            <!--                <label class="col-sm-2 col-form-label">Онлайн копия:</label>-->
+            <!--                <div class="col-sm-10">-->
+            <!--                    <a class="text-link text-blue" th:if="${book.getOnlineCopyPath()} != null" th:href="@{|/books/download?bookId=${book.id}|}">-->
+            <!--                        <span>Скачать книгу</span>-->
+            <!--                    </a>-->
+            <!--                </div>-->
+            <!--            </div>-->
             <div class="mb-2 row">
                 <label for="amount" class="col-sm-2 col-form-label">Количество экземпляров в наличии:</label>
                 <div class="col-sm-10">
@@ -90,7 +90,7 @@
         <hr class="hr"/>
         <div class="mt-2">
             <a th:if="${book.getAmount() > 0}" sec:authorize="!hasRole('ADMIN')" class="btn btn-primary"
-               th:href="'/publish/get-book/' + ${book.id}">Арендовать книгу</a>
+               th:href="'/rent/book/' + ${book.id}">Арендовать книгу</a>
             <button type="button" class="btn btn-secondary" onclick="window.history.back()">Назад</button>
         </div>
     </div>

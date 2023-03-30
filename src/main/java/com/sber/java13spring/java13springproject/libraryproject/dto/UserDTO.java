@@ -22,4 +22,5 @@ public class UserDTO extends GenericDTO {
     private RoleDTO role;
     private String changePasswordToken;
     private Set<Long> userBooksRent;
+    private boolean isDeleted;
 }

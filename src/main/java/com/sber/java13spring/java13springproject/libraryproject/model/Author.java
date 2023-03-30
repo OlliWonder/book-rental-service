@@ -1,11 +1,15 @@
 package com.sber.java13spring.java13springproject.libraryproject.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -14,14 +18,14 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @SequenceGenerator(name = "default_generator", sequenceName = "author_seq", allocationSize = 1)
+//@Where(clause = "is_deleted = false")
 //@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "id")
 //@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@json_id")
 public class Author extends GenericModel {
-    
     @Column(name = "fio", nullable = false)
-    private String fio;
+    private String authorFio;
     
-    @Column(name = "birth_date", nullable = false)
+    @Column(name = "birth_date")
     private LocalDate birthDate;
     
     @Column(name = "description")
@@ -31,7 +35,7 @@ public class Author extends GenericModel {
 //    private Set<Book> books;
     
     //чтобы не было главной/не главной таблицы
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     //@JsonIgnore //убирает рекурсию
     //@JsonManagedReference //убирает рекурсию в связке с JsonBackReference, но не будет работать десериализация
     @JoinTable(

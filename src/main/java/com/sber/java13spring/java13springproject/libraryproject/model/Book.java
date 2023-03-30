@@ -30,7 +30,10 @@ public class Book extends GenericModel {
     @Column(name = "amount", nullable = false)
     private Integer amount;
     
-    @Column(name = "storage_place")
+    @Column(name = "publish")
+    private String publish;
+    
+    @Column(name = "storage_place", nullable = false)
     private String storagePlace;
     
     @Column(name = "online_copy_path")
@@ -39,10 +42,7 @@ public class Book extends GenericModel {
     @Column(name = "description")
     private String description;
     
-    @Column(name = "publish")
-    private String publish;
-    
-    @Column(name = "genre")
+    @Column(name = "genre", nullable = false)
     @Enumerated
     private Genre genre;
     /*
@@ -54,13 +54,14 @@ public class Book extends GenericModel {
     DETACH - повторить удаление из сессии
     orphanRemoval = true - удалить объект, если на него не ссылается ни один родитель
      */
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            fetch = FetchType.LAZY)
     @JoinTable(name = "books_authors",
-    joinColumns = @JoinColumn(name = "book_id"), foreignKey = @ForeignKey(name = "FK_BOOKS_AUTHORS"),
-    inverseJoinColumns = @JoinColumn(name = "author_id"), inverseForeignKey = @ForeignKey(name = "FK_AUTHORS_BOOKS"))
+            joinColumns = @JoinColumn(name = "book_id"), foreignKey = @ForeignKey(name = "FK_BOOKS_AUTHORS"),
+            inverseJoinColumns = @JoinColumn(name = "author_id"), inverseForeignKey = @ForeignKey(name = "FK_AUTHORS_BOOKS"))
     //@JsonBackReference
     private Set<Author> authors;
     
-    @OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "book", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Set<BookRentInfo> bookRentInfos;
 }

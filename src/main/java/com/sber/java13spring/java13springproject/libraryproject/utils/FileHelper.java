@@ -32,9 +32,19 @@ public class FileHelper {
             //Будет сохранен путь вида /files/books/{имя_книги}
             //resultFileName = BOOKS_UPLOAD_DIRECTORY + "/" + fileName;
         }
-        catch (IOException e) {
-            log.error("FileHelper#createFile(): {}", e.getMessage());
+        catch (IOException ex) {
+            log.error("FileHelper#createFile(): {}", ex.getMessage());
         }
         return resultFileName;
+    }
+    
+    public static void deleteFile(String filePath) {
+        Path path = Paths.get(filePath);
+        try {
+            Files.deleteIfExists(path);
+        }
+        catch (IOException ex) {
+            log.error("FileHelper#deleteFile(): {}", ex.getMessage());
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.sber.java13spring.java13springproject.libraryproject.service;
 
+import com.sber.java13spring.java13springproject.libraryproject.constants.Errors;
 import com.sber.java13spring.java13springproject.libraryproject.dto.BookDTO;
 import com.sber.java13spring.java13springproject.libraryproject.dto.BookSearchDTO;
 import com.sber.java13spring.java13springproject.libraryproject.dto.BookWithAuthorsDTO;
@@ -9,6 +10,7 @@ import com.sber.java13spring.java13springproject.libraryproject.mapper.BookWithA
 import com.sber.java13spring.java13springproject.libraryproject.model.Book;
 import com.sber.java13spring.java13springproject.libraryproject.repository.BookRepository;
 import com.sber.java13spring.java13springproject.libraryproject.utils.FileHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -21,11 +23,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Slf4j
 public class BookService extends GenericService<Book, BookDTO> {
     private final BookRepository repository;
     private final BookWithAuthorsMapper bookWithAuthorsMapper;
     
-    protected BookService(BookRepository repository, BookMapper mapper, BookWithAuthorsMapper bookWithAuthorsMapper) {
+    protected BookService(BookRepository repository,
+                          BookMapper mapper,
+                          BookWithAuthorsMapper bookWithAuthorsMapper) {
         //Передаем этот репозиторй в абстрактный севрис,
         //чтобы он понимал с какой таблицей будут выполняться CRUD операции
         super(repository, mapper);
@@ -35,6 +40,12 @@ public class BookService extends GenericService<Book, BookDTO> {
     
     public Page<BookWithAuthorsDTO> getAllBooksWithAuthors(Pageable pageable) {
         Page<Book> booksPaginated = repository.findAll(pageable);
+        List<BookWithAuthorsDTO> result = bookWithAuthorsMapper.toDTOs(booksPaginated.getContent());
+        return new PageImpl<>(result, pageable, booksPaginated.getTotalElements());
+    }
+    
+    public Page<BookWithAuthorsDTO> getAllNotDeletedBooksWithAuthors(Pageable pageable) {
+        Page<Book> booksPaginated = repository.findAllByIsDeletedFalse(pageable);
         List<BookWithAuthorsDTO> result = bookWithAuthorsMapper.toDTOs(booksPaginated.getContent());
         return new PageImpl<>(result, pageable, booksPaginated.getTotalElements());
     }
@@ -74,14 +85,24 @@ public class BookService extends GenericService<Book, BookDTO> {
     public void delete(Long id) throws MyDeleteException {
         Book book = repository.findById(id).orElseThrow(
                 () -> new NotFoundException("Книги с заданным ID=" + id + " не существует"));
-        //TODO: сделать проверку, что нет АКТИВНЫХ аренд!
-        if (book.getBookRentInfos().size() > 0) {
-            throw new MyDeleteException("book cannot be deleted");
-            //TODO: разобраться почему не хочет отображать русские буквы!
-//            throw new MyDeleteException("Книга не может быть удалена, так как у нее есть активные аренды");
+//        boolean bookCanBeDeleted = repository.findBookByIdAndBookRentInfosReturnedFalseAndIsDeletedFalse(id) == null;
+        boolean bookCanBeDeleted = repository.checkBookForDeletion(id);
+        if (bookCanBeDeleted) {
+            if (book.getOnlineCopyPath() != null && !book.getOnlineCopyPath().isEmpty()) {
+                FileHelper.deleteFile(book.getOnlineCopyPath());
+            }
+            markAsDeleted(book);
+            repository.save(book);
         }
         else {
-            repository.deleteById(book.getId());
+            throw new MyDeleteException(Errors.Books.BOOK_DELETE_ERROR);
         }
+    }
+    
+    public void restore(Long objectId) {
+        Book book = repository.findById(objectId).orElseThrow(
+                () -> new NotFoundException("Книги с заданным ID=" + objectId + " не существует"));
+        unMarkAsDeleted(book);
+        repository.save(book);
     }
 }

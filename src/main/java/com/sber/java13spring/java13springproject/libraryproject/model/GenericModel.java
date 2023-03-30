@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
+//TODO: https://ondras.zarovi.cz/sql/demo/?keyword=default - онлайн рисовалка диаграмм
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,9 +23,18 @@ public class GenericModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "default_generator")
     private Long id;
     
-    @Column(name = "created_when", nullable = false)
+    @Column(name = "created_when")
     private LocalDateTime createdWhen;
     
-    @Column(name = "created_by", nullable = false)
+    @Column(name = "created_by")
     private String createdBy;
+    
+    @Column(name = "is_deleted", columnDefinition = "boolean default false")
+    private boolean isDeleted;
+    
+    @Column(name = "deleted_when")
+    private LocalDateTime deletedWhen;
+    
+    @Column(name = "deleted_by")
+    private String deletedBy;
 }
