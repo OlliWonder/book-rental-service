@@ -6,23 +6,23 @@ import com.sber.java13spring.java13springproject.libraryproject.dto.UserDTO;
 import com.sber.java13spring.java13springproject.libraryproject.model.User;
 import com.sber.java13spring.java13springproject.libraryproject.service.UserService;
 import com.sber.java13spring.java13springproject.libraryproject.service.userdetails.CustomUserDetailsService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/rest/users")
 @Tag(name = "Пользователи", description = "Контроллер для работы с пользователями библиотеки")
 @Slf4j
+@SecurityRequirement(name = "Bearer Authentication")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController extends GenericController<User, UserDTO> {
     private final CustomUserDetailsService customUserDetailsService;
     private final JWTTokenUtil jwtTokenUtil;

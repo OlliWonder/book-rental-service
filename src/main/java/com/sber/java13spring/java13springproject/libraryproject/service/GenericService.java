@@ -31,6 +31,7 @@ public abstract class GenericService<T extends GenericModel, N extends GenericDT
     //Инжектим абстрактный маппер для преобразований из DTO -> Entity, и обратно.
     protected final GenericMapper<T, N> mapper;
     
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     protected GenericService(GenericRepository<T> repository,
                              GenericMapper<T, N> mapper) {
         this.repository = repository;
@@ -50,6 +51,16 @@ public abstract class GenericService<T extends GenericModel, N extends GenericDT
         Page<T> objects = repository.findAll(pageable);
         List<N> result = mapper.toDTOs(objects.getContent());
         return new PageImpl<>(result, pageable, objects.getTotalElements());
+    }
+    
+    public Page<N> listAllNotDeleted(Pageable pageable) {
+        Page<T> preResult = repository.findAllByIsDeletedFalse(pageable);
+        List<N> result = mapper.toDTOs(preResult.getContent());
+        return new PageImpl<>(result, pageable, preResult.getTotalElements());
+    }
+    
+    public List<N> listAllNotDeleted() {
+        return mapper.toDTOs(repository.findAllByIsDeletedFalse());
     }
     
     /***

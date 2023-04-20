@@ -5,12 +5,12 @@ import com.sber.java13spring.java13springproject.libraryproject.exception.MyDele
 import com.sber.java13spring.java13springproject.libraryproject.model.GenericModel;
 import com.sber.java13spring.java13springproject.libraryproject.service.GenericService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -21,6 +21,7 @@ import java.util.List;
  * @param <N> - DTO с которой работает контроллер
  */
 @RestController
+@Slf4j
 public abstract class GenericController<T extends GenericModel, N extends GenericDTO> {
     private GenericService<T, N> service;
     

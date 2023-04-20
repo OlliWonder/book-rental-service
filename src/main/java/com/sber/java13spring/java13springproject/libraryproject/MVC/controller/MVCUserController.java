@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import static com.sber.java13spring.java13springproject.libraryproject.constants.UserRolesConstants.ADMIN;
 
@@ -73,6 +74,17 @@ public class MVCUserController {
             userService.sendChangePasswordEmail(userDTO);
             return "redirect:/login";
         }
+    }
+    
+    @GetMapping("/change-password/user")
+    public String changePassword(Model model) {
+        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDTO userDTO = userService.getOne(Long.valueOf(customUserDetails.getUserId()));
+        UUID uuid = UUID.randomUUID();
+        userDTO.setChangePasswordToken(uuid.toString());
+        userService.update(userDTO);
+        model.addAttribute("uuid", uuid);
+        return "users/changePassword";
     }
     
     @GetMapping("/change-password")
@@ -156,7 +168,6 @@ public class MVCUserController {
         return "users/viewAllUsers";
     }
     
-    //TODO: Когда логин под админом, не работает с первого раза поиск - 403 ошибка.
     @PostMapping("/search")
     public String searchUsers(@RequestParam(value = "page", defaultValue = "1") int page,
                               @RequestParam(value = "size", defaultValue = "5") int size,

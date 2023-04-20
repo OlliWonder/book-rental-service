@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/authors")
+@RequestMapping("/rest/authors")
 @Tag(name = "Авторы", description = "Контроллер для работы с авторами книг библиотеки")
 @SecurityRequirement(name = "Bearer Authentication")
 @CrossOrigin(origins = "*", allowedHeaders = "*")

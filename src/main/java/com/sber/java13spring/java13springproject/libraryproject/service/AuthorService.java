@@ -21,19 +21,15 @@ import java.util.Set;
 @Service
 @Slf4j
 public class AuthorService extends GenericService<Author, AuthorDTO> {
-    
     private final AuthorRepository authorRepository;
+    private final BookService bookService;
     
-    protected AuthorService(AuthorRepository authorRepository,
-                            AuthorMapper authorMapper) {
+    public AuthorService(AuthorRepository authorRepository,
+                         AuthorMapper authorMapper,
+                         BookService bookService) {
         super(authorRepository, authorMapper);
         this.authorRepository = authorRepository;
-    }
-    
-    public Page<AuthorDTO> listAllNotDeletedAuthors(Pageable pageable) {
-        Page<Author> authors = authorRepository.findAllByIsDeletedFalse(pageable);
-        List<AuthorDTO> result = mapper.toDTOs(authors.getContent());
-        return new PageImpl<>(result, pageable, authors.getTotalElements());
+        this.bookService = bookService;
     }
     
     public Page<AuthorDTO> searchAuthors(final String fio,
@@ -45,6 +41,7 @@ public class AuthorService extends GenericService<Author, AuthorDTO> {
     
     public void addBook(AddBookDTO addBookDTO) {
         AuthorDTO author = getOne(addBookDTO.getAuthorId());
+        bookService.getOne(addBookDTO.getBookId());
         author.getBooksIds().add(addBookDTO.getBookId());
         update(author);
     }
@@ -57,7 +54,9 @@ public class AuthorService extends GenericService<Author, AuthorDTO> {
         if (authorCanBeDeleted) {
             markAsDeleted(author);
             Set<Book> books = author.getBooks();
-            books.forEach(this::markAsDeleted);
+            if (books != null && books.size() > 0) {
+                books.forEach(this::markAsDeleted);
+            }
             authorRepository.save(author);
         }
         else {
@@ -70,7 +69,9 @@ public class AuthorService extends GenericService<Author, AuthorDTO> {
                 () -> new NotFoundException("Автора с заданным id=" + objectId + " не существует."));
         unMarkAsDeleted(author);
         Set<Book> books = author.getBooks();
-        books.forEach(this::unMarkAsDeleted);
+        if (books != null && books.size() > 0) {
+            books.forEach(this::unMarkAsDeleted);
+        }
         authorRepository.save(author);
     }
 }

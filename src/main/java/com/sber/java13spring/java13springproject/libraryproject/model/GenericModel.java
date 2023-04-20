@@ -4,15 +4,17 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-//TODO: https://ondras.zarovi.cz/sql/demo/?keyword=default - онлайн рисовалка диаграмм
+
 @Getter
 @Setter
 @NoArgsConstructor
 @MappedSuperclass
+@ToString
 public class GenericModel implements Serializable {
     
     @Serial

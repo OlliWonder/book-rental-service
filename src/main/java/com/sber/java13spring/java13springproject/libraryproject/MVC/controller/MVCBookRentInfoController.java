@@ -47,7 +47,7 @@ public class MVCBookRentInfoController {
                             @PathVariable Long id,
                             Model model) {
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
-        Page<BookRentInfoDTO> rentInfoDTOPage = bookRentInfoService.listAll(pageRequest);
+        Page<BookRentInfoDTO> rentInfoDTOPage = bookRentInfoService.listUserRentBooks(id, pageRequest);
         model.addAttribute("rentBooks", rentInfoDTOPage);
         return "userBooks/viewAllUserBooks";
     }

@@ -1,15 +1,13 @@
 package com.sber.java13spring.java13springproject.libraryproject.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class AuthorDTO extends GenericDTO {
     private String authorFio;

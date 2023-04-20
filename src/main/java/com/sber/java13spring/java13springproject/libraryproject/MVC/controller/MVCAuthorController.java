@@ -47,7 +47,7 @@ public class MVCAuthorController {
             result = authorService.listAll(pageRequest);
         }
         else {
-            result = authorService.listAllNotDeletedAuthors(pageRequest);
+            result = authorService.listAllNotDeleted(pageRequest);
         }
         model.addAttribute("authors", result);
         model.addAttribute("exception", exception);

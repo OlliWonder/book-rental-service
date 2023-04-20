@@ -41,6 +41,7 @@
                 <td th:text="${rent.getRentPeriod()} + ' дней'"></td>
                 <td>
                     <a
+                            sec:authorize="isAuthenticated() && (hasRole('USER'))"
                             th:if="!${rent.getReturned()}"
                             th:href="'/rent/return-book/' + ${rent.getId()}"
                             class="btn btn-primary"
